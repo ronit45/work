@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Progress Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@500&display=swap');
+        
+        :root {
+            --primary: #6e48aa;
+            --secondary: #9d50bb;
+            --accent: #4776e6;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --success: #4ecdc4;
+            --warning: #ff9e80;
+            --error: #ef9a9a;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark), #16213e);
+            color: var(--light);
+            font-family: 'Space Mono', monospace;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(110, 72, 170, 0.3);
+            margin-top: 30px;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(71, 118, 230, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .progress-section {
+            margin-bottom: 40px;
+        }
+        
+        .progress-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .progress-title h2 {
+            margin: 0;
+            color: var(--secondary);
+        }
+        
+        .progress-bar-container {
+            height: 30px;
+            background: rgba(157, 80, 187, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 15px;
+            width: 6.59%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(110, 72, 170, 0.7);
+            transition: width 0.5s ease;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        .progress-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .progress-input {
+            flex-grow: 1;
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: white;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .progress-btn {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Space Mono', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(110, 72, 170, 0.5);
+        }
+        
+        .platform-selector {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .platform-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .platform-option select, .platform-option input {
+            flex-grow: 1;
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: white;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .fetch-btn {
+            background: linear-gradient(90deg, #4776e6, #4ecdc4);
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .tech-item {
+            background: rgba(71, 118, 230, 0.1);
+            border: 1px solid rgba(71, 118, 230, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .tech-item:hover {
+            transform: translateY(-5px);
+            background: rgba(71, 118, 230, 0.2);
+            box-shadow: 0 5px 15px rgba(71, 118, 230, 0.3);
+        }
+        
+        .countdown {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(26, 26, 46, 0.5);
+            border-radius: 15px;
+            border: 1px solid var(--primary);
+        }
+        
+        .countdown h3 {
+            color: var(--secondary);
+            margin-top: 0;
+        }
+        
+        .days-left {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 10px 0;
+            text-shadow: 0 0 10px rgba(71, 118, 230, 0.7);
+        }
+        
+        .end-date {
+            font-size: 1.1rem;
+            color: #aaa;
+        }
+        
+        .daily-target {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(26, 26, 46, 0.5);
+            border-radius: 15px;
+            border: 1px solid #4776e6;
+            text-align: center;
+        }
+        
+        .daily-target h3 {
+            color: #4ecdc4;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .target-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #a7ff83;
+            margin: 10px 0;
+        }
+        
+        .target-explanation {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 10px;
+        }
+        
+        .streak {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .streak-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff9e80;
+        }
+        
+        .streak-label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        .daily-update {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(26, 26, 46, 0.5);
+            border-radius: 15px;
+            border: 1px dashed var(--secondary);
+        }
+        
+        .daily-update h3 {
+            color: var(--secondary);
+            margin-top: 0;
+        }
+        
+        textarea {
+            width: 100%;
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        button {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-family: 'Space Mono', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(110, 72, 170, 0.5);
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            opacity: 0;
+            animation: confetti-fall 5s linear forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .milestone {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #aaa;
+            text-align: center;
+        }
+        
+        .milestone span {
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        .status-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .success {
+            background-color: rgba(46, 125, 50, 0.2);
+            color: #a5d6a7;
+        }
+        
+        .error {
+            background-color: rgba(211, 47, 47, 0.2);
+            color: #ef9a9a;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(71, 118, 230, 0.1);
+            border-radius: 5px;
+            font-size: 0.8rem;
+            position: relative;
+        }
+        
+        .calendar-day.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 10px rgba(110, 72, 170, 0.5);
+        }
+        
+        .calendar-day.today {
+            border: 2px solid var(--success);
+        }
+        
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 5px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+        
+        .progress-chart {
+            margin-top: 30px;
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        
+        .chart-bar {
+            flex-grow: 1;
+            background: rgba(71, 118, 230, 0.3);
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            transition: height 0.5s ease;
+        }
+        
+        .chart-bar.active {
+            background: linear-gradient(to top, var(--primary), var(--secondary));
+        }
+        
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DSA PROGRESS TRACKER</h1>
+        
+        <div class="progress-section">
+            <div class="progress-title">
+                <h2>DSA MASTERY</h2>
+                <span id="completed-count">30</span> / <span id="total-count">455</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="dsa-progress">6.59%</div>
+            </div>
+            <div class="stats">
+                <span>Started: June 2024</span>
+                <span>Goal: 455 problems</span>
+            </div>
+            
+            <div class="progress-controls">
+                <input type="number" id="add-questions" class="progress-input" placeholder="Questions completed today" min="1">
+                <button class="progress-btn" id="add-btn">Add</button>
+                <button class="progress-btn" id="reset-btn">Reset</button>
+            </div>
+            
+            <div class="platform-selector">
+                <div class="platform-option">
+                    <select id="platform-select">
+                        <option value="">Select Platform</option>
+                        <option value="leetcode">LeetCode</option>
+                        <option value="codeforces">Codeforces</option>
+                        <option value="hackerrank">HackerRank</option>
+                    </select>
+                    <button class="progress-btn fetch-btn" id="fetch-btn">Fetch</button>
+                </div>
+                <div class="platform-option" id="username-field" style="display: none;">
+                    <input type="text" id="platform-username" class="progress-input" placeholder="Enter username">
+                </div>
+            </div>
+            
+            <div class="milestone" id="milestone-message"></div>
+            <div class="status-message" id="status-message"></div>
+        </div>
+        
+        <div class="countdown">
+            <h3>DAYS REMAINING</h3>
+            <div class="days-left" id="days-left">55</div>
+            <div class="end-date">Target Date: 21 July 2025</div>
+            
+            <div class="daily-target">
+                <h3>DAILY TARGET</h3>
+                <div class="target-value" id="daily-target">8.2</div>
+                <div class="target-explanation" id="target-explanation">
+                    questions per day to reach your goal
+                </div>
+                <div class="streak">
+                    <div class="streak-count" id="streak-count">0</div>
+                    <div class="streak-label">day streak</div>
+                </div>
+            </div>
+            
+            <div class="progress-chart" id="progress-chart">
+                <!-- Chart bars will be added dynamically -->
+            </div>
+            
+            <div class="calendar-header">
+                <div>S</div>
+                <div>M</div>
+                <div>T</div>
+                <div>W</div>
+                <div>T</div>
+                <div>F</div>
+                <div>S</div>
+            </div>
+            <div class="calendar" id="calendar">
+                <!-- Calendar days will be added dynamically -->
+            </div>
+        </div>
+        
+        <h2 style="color: var(--secondary); margin-top: 40px;">TECH STACK PROGRESS</h2>
+        <div class="tech-stack">
+            <div class="tech-item">
+                <h3>JavaScript</h3>
+                <div class="progress-bar-container" style="height: 15px;">
+                    <div class="progress-bar" style="width: 45%;"></div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <h3>MongoDB</h3>
+                <div class="progress-bar-container" style="height: 15px;">
+                    <div class="progress-bar" style="width: 20%;"></div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <h3>Express.js</h3>
+                <div class="progress-bar-container" style="height: 15px;">
+                    <div class="progress-bar" style="width: 25%;"></div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <h3>React</h3>
+                <div class="progress-bar-container" style="height: 15px;">
+                    <div class="progress-bar" style="width: 30%;"></div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <h3>Node.js</h3>
+                <div class="progress-bar-container" style="height: 15px;">
+                    <div class="progress-bar" style="width: 35%;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="daily-update">
+            <h3>DAILY PROGRESS UPDATE</h3>
+            <textarea id="daily-notes" placeholder="What did you accomplish today? What challenges did you face? What's your plan for tomorrow?"></textarea>
+            <button id="save-btn">Save Progress</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize progress data
+        let progressData = {
+            completed: 30,
+            total: 455,
+            lastUpdated: new Date().toISOString().split('T')[0],
+            streak: 0,
+            history: {},
+            notes: {}
+        };
+        
+        // Load progress from localStorage if available
+        if (localStorage.getItem('dsaProgress')) {
+            progressData = JSON.parse(localStorage.getItem('dsaProgress'));
+        }
+        
+        // Milestone messages
+        const milestones = [
+            { percent: 10, message: "Great start! You've completed 10% of your DSA journey!" },
+            { percent: 25, message: "Quarter way there! Keep up the good work!" },
+            { percent: 50, message: "Halfway mark! You're doing amazing!" },
+            { percent: 75, message: "Three quarters done! Almost there!" },
+            { percent: 100, message: "Congratulations! You've completed all DSA problems!" }
+        ];
+        
+        // DOM elements
+        const completedCount = document.getElementById('completed-count');
+        const totalCount = document.getElementById('total-count');
+        const progressBar = document.getElementById('dsa-progress');
+        const addInput = document.getElementById('add-questions');
+        const addBtn = document.getElementById('add-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const milestoneMessage = document.getElementById('milestone-message');
+        const saveBtn = document.getElementById('save-btn');
+        const platformSelect = document.getElementById('platform-select');
+        const fetchBtn = document.getElementById('fetch-btn');
+        const usernameField = document.getElementById('username-field');
+        const platformUsername = document.getElementById('platform-username');
+        const statusMessage = document.getElementById('status-message');
+        const dailyTarget = document.getElementById('daily-target');
+        const targetExplanation = document.getElementById('target-explanation');
+        const streakCount = document.getElementById('streak-count');
+        const dailyNotes = document.getElementById('daily-notes');
+        const progressChart = document.getElementById('progress-chart');
+        const calendar = document.getElementById('calendar');
+        
+        // Update progress display
+        function updateProgressDisplay() {
+            const percentage = (progressData.completed / progressData.total) * 100;
+            
+            completedCount.textContent = progressData.completed;
+            totalCount.textContent = progressData.total;
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage.toFixed(2) + '%';
+            
+            // Check for milestones
+            checkMilestones(percentage);
+            
+            // Update countdown and daily targets
+            updateCountdown();
+            
+            // Update streak counter
+            updateStreak();
+            
+            // Update history
+            updateHistory();
+            
+            // Update calendar
+            updateCalendar();
+            
+            // Update chart
+            updateChart();
+            
+            // Load today's notes if available
+            const today = new Date().toISOString().split('T')[0];
+            if (progressData.notes[today]) {
+                dailyNotes.value = progressData.notes[today];
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('dsaProgress', JSON.stringify(progressData));
+        }
+        
+        // Check for milestone achievements
+        function checkMilestones(currentPercent) {
+            milestoneMessage.textContent = '';
+            
+            milestones.forEach(milestone => {
+                const milestonePercent = (progressData.completed / progressData.total) * 100;
+                if (milestonePercent >= milestone.percent && 
+                    (progressData.completed - (addInput.value || 0)) / progressData.total * 100 < milestone.percent) {
+                    milestoneMessage.textContent = milestone.message;
+                    createConfetti(30);
+                }
+            });
+        }
+        
+        // Add completed questions
+        addBtn.addEventListener('click', function() {
+            const toAdd = parseInt(addInput.value);
+            
+            if (isNaN(toAdd) || toAdd <= 0) {
+                showStatus('Please enter a valid number greater than 0', 'error');
+                return;
+            }
+            
+            progressData.completed += toAdd;
+            
+            // Don't exceed total
+            if (progressData.completed > progressData.total) {
+                progressData.completed = progressData.total;
+            }
+            
+            progressData.lastUpdated = new Date().toISOString().split('T')[0];
+            updateProgressDisplay();
+            addInput.value = '';
+            
+            // Celebration for adding progress
+            if (toAdd > 0) {
+                createConfetti(Math.min(toAdd, 20));
+                showStatus(`Added ${toAdd} problems to your progress!`, 'success');
+            }
+        });
+        
+        // Reset progress
+        resetBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to reset your DSA progress?')) {
+                progressData.completed = 0;
+                progressData.lastUpdated = new Date().toISOString().split('T')[0];
+                progressData.streak = 0;
+                updateProgressDisplay();
+                showStatus('Progress has been reset', 'success');
+            }
+        });
+        
+        // Show platform username field when platform is selected
+        platformSelect.addEventListener('change', function() {
+            usernameField.style.display = this.value ? 'flex' : 'none';
+        });
+        
+        // Fetch data from coding platforms
+        fetchBtn.addEventListener('click', async function() {
+            const platform = platformSelect.value;
+            const username = platformUsername.value.trim();
+            
+            if (!platform) {
+                showStatus('Please select a platform', 'error');
+                return;
+            }
+            
+            if (!username) {
+                showStatus('Please enter your username', 'error');
+                return;
+            }
+            
+            try {
+                showStatus('<div class="loading"></div> Fetching data...', '');
+                fetchBtn.disabled = true;
+                
+                // In a real implementation, you would use a backend proxy to avoid CORS issues
+                // This is a mock implementation that simulates fetching data
+                const fetchedCount = await mockFetchProblems(platform, username);
+                
+                if (fetchedCount !== null) {
+                    const newProblems = Math.max(0, fetchedCount - progressData.completed);
+                    
+                    if (newProblems > 0) {
+                        progressData.completed = fetchedCount;
+                        progressData.lastUpdated = new Date().toISOString().split('T')[0];
+                        updateProgressDisplay();
+                        showStatus(`Found ${newProblems} new problems on ${platform}!`, 'success');
+                        createConfetti(Math.min(newProblems, 30));
+                    } else {
+                        showStatus(`Your progress is up to date with ${platform}`, 'success');
+                    }
+                }
+            } catch (error) {
+                showStatus(`Error fetching data: ${error.message}`, 'error');
+                console.error('Fetch error:', error);
+            } finally {
+                fetchBtn.disabled = false;
+            }
+        });
+        
+        // Mock function to simulate fetching problems from platforms
+        async function mockFetchProblems(platform, username) {
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Mock data - in a real app, you would make actual API calls
+            const mockData = {
+                leetcode: {
+                    'user1': 75,
+                    'user2': 120,
+                    'dsa_tracker': 30
+                },
+                codeforces: {
+                    'cf_user1': 150,
+                    'cf_user2': 80
+                },
+                hackerrank: {
+                    'hr_user1': 90,
+                    'hr_user2': 60
+                }
+            };
+            
+            if (mockData[platform] && mockData[platform][username]) {
+                return mockData[platform][username];
+            }
+            
+            throw new Error('User not found or platform not supported');
+        }
+        
+        // Update countdown and calculate daily targets
+        function updateCountdown() {
+            const endDate = new Date('July 21, 2025');
+            const today = new Date();
+            const diffTime = endDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('days-left').textContent = diffDays;
+            
+            // Calculate daily target
+            const remainingProblems = progressData.total - progressData.completed;
+            const dailyTargetValue = Math.ceil(remainingProblems / diffDays);
+            
+            dailyTarget.textContent = dailyTargetValue.toFixed(1);
+            
+            // Update explanation text
+            if (dailyTargetValue <= 0) {
+                targetExplanation.textContent = "You've already reached your goal!";
+                dailyTarget.textContent = "0";
+            } else if (dailyTargetValue > 20) {
+                targetExplanation.textContent = "Consider adjusting your target date - this pace might be intense!";
+            } else if (dailyTargetValue > 10) {
+                targetExplanation.textContent = "Ambitious pace! Stay consistent!";
+            } else {
+                targetExplanation.textContent = "questions per day to reach your goal";
+            }
+            
+            return diffDays;
+        }
+        
+        // Update streak counter
+        function updateStreak() {
+            const lastUpdated = new Date(progressData.lastUpdated);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // If last update was yesterday, increment streak
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            let streak = progressData.streak || 0;
+            
+            if (lastUpdated.toDateString() === today.toDateString()) {
+                // Already updated today - do nothing
+            } else if (lastUpdated.toDateString() === yesterday.toDateString()) {
+                streak += 1;
+            } else {
+                streak = 1; // Reset streak if broken
+            }
+            
+            progressData.streak = streak;
+            streakCount.textContent = streak;
+            
+            // Visual feedback for streaks
+            if (streak >= 7) {
+                streakCount.style.color = "#ff9e80";
+                streakCount.style.textShadow = "0 0 10px rgba(255, 158, 128, 0.7)";
+            }
+            if (streak >= 30) {
+                streakCount.style.color = "#4ecdc4";
+                streakCount.style.textShadow = "0 0 10px rgba(78, 205, 196, 0.7)";
+            }
+        }
+        
+        // Update progress history
+        function updateHistory() {
+            const today = new Date().toISOString().split('T')[0];
+            if (!progressData.history[today]) {
+                progressData.history[today] = 0;
+            }
+            progressData.history[today] = progressData.completed;
+        }
+        
+        // Update calendar view
+        function updateCalendar() {
+            calendar.innerHTML = '';
+            
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            // Get first day of month
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            
+            // Get days in month
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            // Add empty cells for days before first day of month
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendar.appendChild(emptyDay);
+            }
+            
+            // Add days of month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                // Mark days with progress
+                if (progressData.history[dateStr]) {
+                    dayElement.classList.add('active');
+                }
+                
+                // Mark today
+                if (day === today.getDate() && currentMonth === today.getMonth()) {
+                    dayElement.classList.add('today');
+                }
+                
+                calendar.appendChild(dayElement);
+            }
+        }
+        
+        // Update progress chart
+        function updateChart() {
+            progressChart.innerHTML = '';
+            
+            const historyEntries = Object.entries(progressData.history);
+            const last7Days = historyEntries.slice(-7);
+            
+            if (last7Days.length === 0) return;
+            
+            // Find max value for scaling
+            const maxValue = Math.max(...last7Days.map(([_, count]) => count), progressData.total);
+            
+            last7Days.forEach(([date, count]) => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                if (count > 0) bar.classList.add('active');
+                
+                const height = (count / maxValue) * 100;
+                bar.style.height = `${height}%`;
+                
+                const label = document.createElement('div');
+                label.className = 'chart-label';
+                label.textContent = new Date(date).toLocaleDateString('en-US', { weekday: 'short' });
+                
+                bar.appendChild(label);
+                progressChart.appendChild(bar);
+            });
+        }
+        
+        // Show status message
+        function showStatus(message, type) {
+            statusMessage.textContent = '';
+            statusMessage.className = 'status-message';
+            
+            if (type) {
+                statusMessage.classList.add(type);
+            }
+            
+            statusMessage.innerHTML = message;
+            
+            // Auto-hide after 5 seconds if it's a success message
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusMessage.textContent = '';
+                    statusMessage.className = 'status-message';
+                }, 5000);
+            }
+        }
+        
+        // Save daily notes
+        saveBtn.addEventListener('click', function() {
+            const today = new Date().toISOString().split('T')[0];
+            progressData.notes[today] = dailyNotes.value;
+            
+            // Create confetti effect
+            createConfetti(20);
+            
+            // Button animation
+            saveBtn.textContent = 'Progress Saved!';
+            setTimeout(() => {
+                saveBtn.textContent = 'Save Progress';
+            }, 2000);
+            
+            showStatus('Daily progress saved successfully', 'success');
+            
+            // Save to localStorage
+            localStorage.setItem('dsaProgress', JSON.stringify(progressData));
+        });
+        
+        // Create confetti effect
+        function createConfetti(count) {
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Random position at top of screen
+                confetti.style.left = Math.random() * 100 + 'vw';
+                
+                // Random color
+                const colors = ['#6e48aa', '#9d50bb', '#4776e6', '#4ecdc4', '#a7ff83'];
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random size
+                const size = Math.random() * 10 + 5;
+                confetti.style.width = size + 'px';
+                confetti.style.height = size + 'px';
+                
+                // Random animation duration
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+        
+        // Initialize
+        updateProgressDisplay();
+        
+        // Allow pressing Enter in the input field to add questions
+        addInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addBtn.click();
+            }
+        });
+        
+        platformUsername.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                fetchBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

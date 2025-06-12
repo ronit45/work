@@ -1,0 +1,35 @@
+Customer ID: 45678
+Customer Name: Ronit
+Bill Date: 15 07 20245
+City: Rqanchi
+Units Consumed: 6.0
+Total Bill Amount: 30.0
+======================================
+Customer ID: 12345
+Customer Name: fedfdf
+Bill Date: 34 33
+City: ree
+Units Consumed: 50.0
+Total Bill Amount: 250.0
+======================================
+Customer ID: 34567
+Customer Name: tttrrre
+Bill Date: 34 554 333
+City: ffdd
+Units Consumed: 51.0
+Total Bill Amount: 257.5
+======================================
+Customer ID: 45425
+Customer Name: efasdfg
+Bill Date: 325 425 3425 
+City: rawen
+Units Consumed: 101.0
+Total Bill Amount: 635.0
+======================================
+Customer ID: 23456
+Customer Name: ronit
+Bill Date: 15 06 2024
+City: ranchi
+Units Consumed: 51.0
+Total Bill Amount: 257.5
+======================================

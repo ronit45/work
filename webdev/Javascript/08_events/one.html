@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Html Events</title>
+</head>
+<body style = "background-color: #212121; color: aliceblue;">
+    <h2 style="color: aliceblue;">Amazing images</h2>
+    <div>
+        <u id="images">
+            <li><img width="200px" id="photoshop" src="images/photoshop.jpg"
+                alt="photoshop"></li>
+            <li>
+                <img width="200px" id="japan" src="images/japan.jpg" alt="">
+            </li>
+            <li>
+                <img width="200px" id="river" src="images/river.jpg" alt="">
+            </li>
+            <li>
+                <img width="200px" id="owl" src="images/owl.jpg" alt="">
+            </li>
+            <li>
+                <img width="200px" id="prayer" src="images/prayer.jpg" alt="">
+            </li>
+            <li>
+                <a style="color: aliceblue;" href="https://google.com" id="google">Google</a>
+            </li>
+        </ul>
+
+    </div>
+</body>
+<script>
+    // sequential 
+    // document.getElementById('owl').onclick = function(){
+    //     alert("owl clicked")
+    // }
+    // attachEvent
+    // jQuery - .on
+
+    // type , timestamp , defaultPrevented (eg : form)
+    // target, toElement, srcElement, currentTarget
+    // clientX, clientY, screenX, screenY
+    // altkey, ctrlkey, shiftkey, keycode
+
+
+    // document.getElementById('images').addEventListener('click', function(e){
+    //     console.log("clicked inside ul")
+    // },false) // false is default // capturing top down tree - true
+    // bubbling down top tree - false
+
+
+    // document.getElementById('owl').addEventListener('click', function(e){
+    //     console.log("owl clicked")
+    //     // stops bubbling
+    //     e.stopPropagation()
+    // },false) 
+    
+    // document.getElementById('google').addEventListener('click', function(e){
+    //         e.stopPropagation()
+    //         e.preventDefault()
+            
+    //         console.log('google clicked')
+    //     },false)
+    
+    document.querySelector('#images').addEventListener
+    ('click', function(e){
+        // console.log(e.target.parentNode)
+        // let removeit = e.target.parentNode
+
+        if(e.target.tagName === 'IMG'){
+            console.log(e.target.id)
+            let removeIt = e.target.parentNode
+            removeIt.remove()
+        }
+        
+        
+        //removeit.remove()
+        //removeit.parentNode.removeChild(removeit)
+    },false)
+</script>
+</html>

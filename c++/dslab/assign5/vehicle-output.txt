@@ -1,0 +1,19 @@
+Enter the number of strings: Jharkhand Vehicles: 
+JH
+JH
+
+Other State Vehicles: 
+01
+2035
+02
+1001
+BH
+3456
+OD
+0001
+WB
+2001
+WB
+03
+4011
+AP
